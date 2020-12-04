@@ -1,0 +1,19 @@
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: dhb
+    password: 123456
+    # 对应rabbitmq控制台->Admin下的具体角色表格中的Can access virtual hosts 中的选项。如果配置不正确会连接不上
+    virtual-host: dhb
+  application:
+    name: rabbitmq-demo
+server:
+  port: 35672
+  servlet:
+    context-path: /
+logging:
+  level:
+    # 开启amqp日志，能详细的看到消息的发送、消费过程
+    org.springframework.amqp: debug
+
