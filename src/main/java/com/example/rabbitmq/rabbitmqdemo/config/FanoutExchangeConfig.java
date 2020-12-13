@@ -43,13 +43,15 @@ import org.springframework.context.annotation.Configuration;
  *
  *
  * Exchange有多种类型，这里是Fanout，就是<b>广播给绑定在此Exchange上的所有队列</b>.<br/>
- * Producer和Exchange直接通过routingKey来配置.前面的基本使用和工作队列都是通过指定Queue的名字来进行联系的<br/>
+ * Producer和Exchange直接绑定.前面的基本使用和工作队列都是通过指定Queue的名字来进行联系的<br/>
  * Queue和Exchange的绑定关系，通过配置Binding来手动配置的，将某些队列绑到一个或者几个Exchange上.
+ * 而一个生产者生产的消息具体发送给哪个消费者呢，通过routingKey和binding.with(key)可以确定，当key一样时，则绑定在Exchange上的Queue会接收到消息
+ * 这里没有这样的设置，因为广播发送会忽略这些.
  * @author jacksparrow414
  * @date 2020/12/13
  */
 @Configuration
-public class FanoutConfig {
+public class FanoutExchangeConfig {
     
     @Bean
     public FanoutExchange fanoutExchange() {
