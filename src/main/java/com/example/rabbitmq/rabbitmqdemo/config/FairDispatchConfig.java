@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * <a href="https://www.rabbitmq.com/tutorials/tutorial-two-spring-amqp.html">工作队列文档(包含公平派发和轮询派发)</a><br/>
- * 公平派发的队列配置.<br/>
+ * 工作队列的公平派发的配置.<br/>
  * 工作队列比起基本队列{@link BasicConfig},工作队列可以有多个消费者,并且队列中的多个消息会分给多个消费者.
  * 多个消费者之间同一时间不会消费同一条消息.<br/>
  * <pre>
@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
  *                             --------                             ----------</pre>
  * RabbitMQ在多个消费者之间采用的round-robin(轮询)的方式.
  * <ul>
- * <li> 第1条消息给消费者1
+ * <li> 第一条消息给消费者1
  * <li> 第二条消息给消费者2
  * <li> 第三条消息给消费者1
  * <li> 第四条消息给消费者2

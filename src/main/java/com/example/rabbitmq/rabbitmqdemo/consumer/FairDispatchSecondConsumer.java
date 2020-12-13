@@ -30,6 +30,6 @@ public class FairDispatchSecondConsumer {
     public void receiveFairDispatchMessage(String receivedMessage) {
         // 休眠1分钟,用来模拟该消费者执行耗时比较长的情况
         TimeUnit.MINUTES.sleep(1);
-        System.out.println(SECOND_CONSUMER + receivedMessage);
+        log.info(SECOND_CONSUMER + receivedMessage);
     }
 }

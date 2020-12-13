@@ -22,6 +22,6 @@ public class BasicConsumer {
      */
     @RabbitHandler
     public void receiveBasicMessage(String receivedMessage) {
-        System.out.println(receivedMessage);
+        log.info(receivedMessage);
     }
 }

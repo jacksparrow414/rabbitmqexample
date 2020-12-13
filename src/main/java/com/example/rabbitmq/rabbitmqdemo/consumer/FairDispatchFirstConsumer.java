@@ -24,6 +24,6 @@ public class FairDispatchFirstConsumer {
      */
     @RabbitHandler
     public void receiveFairDispatchMessage(String receivedMessage) {
-        System.out.println(FIRST_CONSUMER+receivedMessage);
+        log.info(FIRST_CONSUMER+receivedMessage);
     }
 }
