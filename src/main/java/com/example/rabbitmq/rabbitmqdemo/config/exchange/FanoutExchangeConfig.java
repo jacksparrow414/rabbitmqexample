@@ -1,9 +1,6 @@
-package com.example.rabbitmq.rabbitmqdemo.config;
+package com.example.rabbitmq.rabbitmqdemo.config.exchange;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -56,25 +53,5 @@ public class FanoutExchangeConfig {
     @Bean
     public FanoutExchange fanoutExchange() {
         return new FanoutExchange("fanout");
-    }
-    
-    @Bean
-    public Queue firstFanoutQueue() {
-        return new Queue("firstFanout");
-    }
-    
-    @Bean
-    public Queue secondFanoutQueue() {
-        return new Queue("secondFanout");
-    }
-    
-    @Bean
-    public Binding firstFanoutBinding() {
-       return BindingBuilder.bind(firstFanoutQueue()).to(fanoutExchange());
-    }
-    
-    @Bean
-    public Binding secondFanoutBinding() {
-        return BindingBuilder.bind(secondFanoutQueue()).to(fanoutExchange());
     }
 }

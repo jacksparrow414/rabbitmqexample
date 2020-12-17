@@ -1,10 +1,8 @@
 package com.example.rabbitmq.rabbitmqdemo.producer;
 
-import com.example.rabbitmq.rabbitmqdemo.config.BasicConfig;
+import com.example.rabbitmq.rabbitmqdemo.config.exchange.BasicConfig;
 import java.time.LocalDateTime;
-import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,9 +21,7 @@ public class BasicProducer {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
-    @Resource(name = "basicQueue")
-    private Queue basicQueue;
+    
 
     /**
      * 发送消息.
@@ -34,6 +30,6 @@ public class BasicProducer {
      * @return void
      */
     public void sendBasicMessage(LocalDateTime localDateTime) {
-        rabbitTemplate.convertAndSend(basicQueue.getName(), BASIC_MESSAGE + localDateTime.toString());
+        rabbitTemplate.convertAndSend("basic", BASIC_MESSAGE + localDateTime.toString());
     }
 }

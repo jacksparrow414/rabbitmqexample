@@ -1,9 +1,6 @@
-package com.example.rabbitmq.rabbitmqdemo.config;
+package com.example.rabbitmq.rabbitmqdemo.config.exchange;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,23 +22,4 @@ public class DirectExchangeConfig {
         return new DirectExchange("direct");
     }
     
-    @Bean
-    public Queue firstDirectQueue() {
-        return new Queue("firstDirect");
-    }
-    
-    @Bean
-    public Queue secondDirectQueue() {
-        return new Queue("secondDirect");
-    }
-    
-    @Bean
-    public Binding firstDirectBinding() {
-        return BindingBuilder.bind(firstDirectQueue()).to(directExchange()).with("first");
-    }
-    
-    @Bean
-    public Binding secondDirectBinding() {
-        return BindingBuilder.bind(secondDirectQueue()).to(directExchange()).with("second");
-    }
 }

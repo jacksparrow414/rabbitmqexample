@@ -1,8 +1,5 @@
-package com.example.rabbitmq.rabbitmqdemo.config;
+package com.example.rabbitmq.rabbitmqdemo.config.exchange;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,40 +27,5 @@ public class TopicExchangeConfig {
     @Bean
     public TopicExchange topicExchange() {
         return new TopicExchange("topic");
-    }
-
-    @Bean
-    public Queue firstTopicQueue() {
-        return new Queue("firstTopic");
-    }
-
-    @Bean
-    public Queue secondTopicQueue() {
-        return new Queue("secondTopic");
-    }
-
-    @Bean
-    public Queue thirdTopicQueue() {
-        return new Queue("thirdTopic");
-    }
-
-    @Bean
-    public Binding firstTopicBinding() {
-        return BindingBuilder.bind(firstTopicQueue()).to(topicExchange()).with("*.first.*");
-    }
-
-    @Bean
-    public Binding secondTopicBinding() {
-        return BindingBuilder.bind(secondTopicQueue()).to(topicExchange()).with("*.second.*");
-    }
-
-    @Bean
-    public Binding thirdTopicBinding() {
-        return BindingBuilder.bind(thirdTopicQueue()).to(topicExchange()).with("*.*.Topic");
-    }
-
-    @Bean
-    public Binding fourthTopicBinding() {
-        return BindingBuilder.bind(thirdTopicQueue()).to(topicExchange()).with("message.#");
     }
 }

@@ -1,7 +1,5 @@
-package com.example.rabbitmq.rabbitmqdemo.config;
+package com.example.rabbitmq.rabbitmqdemo.config.exchange;
 
-import org.springframework.amqp.core.Queue;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -44,9 +42,5 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class FairDispatchConfig {
-    
-    @Bean
-    public Queue fairDispatchQueue() {
-        return new Queue("fairDispatch");
-    }
+
 }

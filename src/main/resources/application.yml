@@ -11,7 +11,7 @@ spring:
         # 此时还未加手动确认，现在还是自动确认，降低prefetch的值验证公平派发
         prefetch: 2
   application:
-    name: rabbitmq-demo
+    name: rabbitmq-producer
 server:
   port: 35672
   servlet:
