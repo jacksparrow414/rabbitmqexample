@@ -17,7 +17,10 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class RabbitMqConfig {
-    
+
+    /**
+     * 官方推荐使用{@link PooledChannelConnectionFactory}来管理Channel连接.
+     */
     @Bean
     public org.springframework.amqp.rabbit.connection.ConnectionFactory connectionFactory() {
         ConnectionFactory connectionFactory = new ConnectionFactory();
@@ -27,6 +30,7 @@ public class RabbitMqConfig {
         result.setUsername("dhb");
         result.setPassword("123456");
         result.setVirtualHost("dhb");
+        result.setConnectionNameStrategy(factory -> "producer-connection");
         // TODO 对象池的设置
         // 使用Apache Common Pool2,一共有两个对象池
         result.setPoolConfigurer((pool, tx) -> {
@@ -35,10 +39,7 @@ public class RabbitMqConfig {
                 pool.setMaxTotal(2);
             }else {
                 // 非事务的对象池,默认最大为8
-                pool.setMaxTotal(15);
-                pool.setMaxIdle(1);
-                pool.setMinIdle(1);
-                pool.setTestWhileIdle(true);
+                pool.setMaxTotal(8);
             }
         });
         return result;
@@ -63,14 +64,5 @@ public class RabbitMqConfig {
 //        reuslt.addAfterReceivePostProcessors();
 //        reuslt.setConfirmCallback();
         return reuslt;
-    }
-    
-    @Bean
-    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory() {
-        SimpleRabbitListenerContainerFactory result = new SimpleRabbitListenerContainerFactory();
-        result.setConnectionFactory(connectionFactory());
-        result.setMessageConverter(new Jackson2JsonMessageConverter());
-        result.setPrefetchCount(2);
-        return result;
     }
 }

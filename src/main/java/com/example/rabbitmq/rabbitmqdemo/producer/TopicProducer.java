@@ -6,6 +6,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+
 /**
  * @author jacksparrow414
  * @date 2020/12/14 14:28
@@ -20,6 +22,7 @@ public class TopicProducer {
     @Autowired
     private TopicExchange topicExchange;
 
+    @PostConstruct
     public void sendTopicMessage() {
         // 可以手动设置Exchange名字
         rabbitTemplate.setExchange(topicExchange.getName());
