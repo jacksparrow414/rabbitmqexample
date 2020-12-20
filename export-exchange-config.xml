@@ -13,32 +13,90 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>rabbitmq-producer-excahnge-config</name>
     <description>Demo project for RabbitMQ</description>
-
+    <!--执行命令 mvn -f export-config-package install-->
+    <!-- -f 参数用于手动选择pom文件-->
     <properties>
         <!-- 配置，需要导出的包 -->
-        <export-api-package>com/example/rabbitmq/rabbitmqdemo/config/exchange</export-api-package>
+        <export-config-package>com/example/rabbitmq/rabbitmqdemo/config/exchange</export-config-package>
         <java.version>1.8</java.version>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
-       <sourceDirectory>src/main/java/${export-api-package}</sourceDirectory>
+        <!--声明要打包的文件夹目录-->
+        <sourceDirectory>src/main/java/${export-config-package}</sourceDirectory>
+
+        <!--将resource下的文件夹下的文件过滤掉,不打到包里-->
+        <!-- 说明文档 http://maven.apache.org/plugins/maven-resources-plugin/examples/include-exclude.html-->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <!--排除resources目录以及子目录的yml文件-->
+                    <!--<exclude>**/*.yml</exclude>-->
+                    <!--这里我们这样写，即resource目录以及其子目录下的所有文件都不要打进去-->
+                    <exclude>**/*.*</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <plugins>
+            <!--只打源码包的插件，这里没用到-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--在test-compile阶段不编译test 源码-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <executions>
+                    <execution>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <!--执行test的插件，这里设置跳过test-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <executions>
+                    <execution>
+                        <id>skip-test</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
