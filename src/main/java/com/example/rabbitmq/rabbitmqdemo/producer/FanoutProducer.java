@@ -6,7 +6,6 @@ import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,7 +26,7 @@ public class FanoutProducer {
     @Autowired
     private FanoutExchange fanoutExchange;
     
-    @Scheduled(fixedDelay = 5000, initialDelay = 5000)
+    //@Scheduled(fixedDelay = 5000, initialDelay = 5000)
     public void sendFanoutMessage() {
         rabbitTemplate.convertAndSend(fanoutExchange.getName(), "", FANOUT_MESSAGE + LocalDateTime.now().toString());
     }
