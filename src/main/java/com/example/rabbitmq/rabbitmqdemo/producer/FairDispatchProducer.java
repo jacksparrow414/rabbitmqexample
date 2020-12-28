@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +25,7 @@ public class FairDispatchProducer {
     /**
      * 定时5秒发送发送消息.
      */
-    @Scheduled(fixedDelay = 5000, initialDelay = 3000)
+    //@Scheduled(fixedDelay = 5000, initialDelay = 3000)
     public void sendFairDispatchMessage() {
         rabbitTemplate.convertAndSend("fairDispatch", FAIR_DISPATCH_MESSAGE + LocalDateTime.now());
     }

@@ -1,5 +1,7 @@
 package com.example.rabbitmq.rabbitmqdemo.config.mq;
 
+import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory.CacheMode;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory.ConfirmType;
@@ -11,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 如果要想使用publish-confirm模式则需要使用CachingConnectionFactory<br/>
  * <a href="https://docs.spring.io/spring-amqp/docs/current/reference/html/#template-confirms">官方文档</a><br/>
+ * <a href="https://docs.spring.io/spring-amqp/docs/current/reference/html/#cf-pub-conf-ret">官方文档</a>
  * 开启条件：
  * <pre>
  * 1、PublisherReturns = true
@@ -26,6 +29,7 @@ import org.springframework.context.annotation.Configuration;
  * @author jacksparrow414
  * @date 2020/12/24
  */
+@Slf4j
 @Configuration
 public class PublishConfirmRabbitMqConfig {
     
@@ -49,20 +53,24 @@ public class PublishConfirmRabbitMqConfig {
     public RabbitTemplate publishConfirmRabbitTemplate() {
         RabbitTemplate result = new RabbitTemplate(publishConnectionFactory());
         // 第一步：判断Producer -> Exchange 是否有问题
+        // 要想使用correlationData，则发送时要设置该值，否则是null，设置方法见{@link com.example.rabbitmq.rabbitmqdemo.producer.TopicProducer.sendTopicMessage}
         result.setConfirmCallback((correlationData, ack, cause) -> {
             if (ack) {
-                System.out.println("能够被Rabbit MQ Server的exchange接收到......");
+                log.info("能够被Rabbit MQ Server的exchange接收到......");
             }else {
-                System.out.println("在Rabbit MQ Server上找不到对应的exchange......" + cause);
+                log.info("在Rabbit MQ Server上找不到对应的exchange......原始信息id是{}, 原始信息是{}, 原因是{}" ,
+                    Objects.requireNonNull(correlationData).getId(),
+                    // 获取到body体的字节数组，直接只用 new String(byte[])构造方法，将字节数组转为字符串
+                    new String(Objects.requireNonNull(correlationData.getReturnedMessage()).getBody()),
+                    cause);
             }
         });
         // 第二步：判断Exchange -> Queue 是否有问题
-        
         // 设置为true，在exchange找不到queue的时候才会回调
         // 官方文档说明：https://docs.spring.io/spring-amqp/docs/current/reference/html/#template-confirms
         result.setMandatory(true);
         result.setReturnsCallback(returned -> {
-            System.out.println("找到了exchange，但是没有被路由到正确的queue....routingKey是:" + returned.getRoutingKey());
+            log.info("找到了exchange，但是没有被路由到正确的queue....routingKey是:{}, 原始信息是{}", returned.getRoutingKey(), new String(returned.getMessage().getBody()));
         });
         return result;
     }
