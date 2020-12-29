@@ -1,12 +1,15 @@
-package com.example.rabbitmq.rabbitmqdemo.config.mq;
+package com.example.rabbitmq.rabbitmqdemo.config.inner.mq;
 
+import java.util.Calendar;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory.CacheMode;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory.ConfirmType;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -50,8 +53,24 @@ public class PublishConfirmRabbitMqConfig {
     }
     
     @Bean
+    public Jackson2JsonMessageConverter messageConverter() {
+        return new Jackson2JsonMessageConverter();
+    }
+    
+    @Bean
     public RabbitTemplate publishConfirmRabbitTemplate() {
         RabbitTemplate result = new RabbitTemplate(publishConnectionFactory());
+        result.setMessageConverter(messageConverter());
+        result.setBeforePublishPostProcessors(message -> {
+            // 设置默认Content-Type
+            if (message.getMessageProperties().getContentType() == null) {
+                message.getMessageProperties().setContentType(MessageProperties.CONTENT_TYPE_TEXT_PLAIN);
+            }
+            if (message.getMessageProperties().getTimestamp() == null) {
+                message.getMessageProperties().setTimestamp(Calendar.getInstance().getTime());
+            }
+            return message;
+        });
         // 第一步：判断Producer -> Exchange 是否有问题
         // 要想使用correlationData，则发送时要设置该值，否则是null，设置方法见{@link com.example.rabbitmq.rabbitmqdemo.producer.TopicProducer.sendTopicMessage}
         result.setConfirmCallback((correlationData, ack, cause) -> {

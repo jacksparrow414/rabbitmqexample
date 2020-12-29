@@ -16,5 +16,7 @@ public class DirectExample {
     
     public void directExchangeUse() {
         directProducer.sendDirectMessage();
+        directProducer.sendDirectConvertMessage();
+        directProducer.sendDirectPoJoMessage();
     }
 }

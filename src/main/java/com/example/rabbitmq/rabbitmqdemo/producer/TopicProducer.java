@@ -37,8 +37,9 @@ public class TopicProducer {
         // 可以发送时直接发送Message对象，MessageProperties对象中可以设置该消息是否为持久化的，默认是持久化的
         MessageProperties messageProperties = new MessageProperties();
         messageProperties.setDeliveryMode(MessageDeliveryMode.PERSISTENT);
+        messageProperties.setContentType(MessageProperties.CONTENT_TYPE_TEXT_PLAIN);
         Message message = new Message("this is persistent message".getBytes(), messageProperties);
-        rabbitTemplate.convertAndSend(topicExchange.getName(), "message.second.Topic", message);
+        rabbitTemplate.send(topicExchange.getName(), "message.second.Topic", message);
         // 2020-12-24更新：要想恢复正常，删掉wrong.queue.和wrongExchange字符串
         rabbitTemplate.convertAndSend(topicExchange.getName(), "wrong.queue.message.second.Topic", "this is send second topic message");
         // 发送消息时设置，在rabbitTemplate的confirm时，能获取到一些信息，比如消息的ID，可以自定义设置返回的信息，如果不设置，则默认是null

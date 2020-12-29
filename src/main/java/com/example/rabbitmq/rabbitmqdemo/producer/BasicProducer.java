@@ -1,8 +1,12 @@
 package com.example.rabbitmq.rabbitmqdemo.producer;
 
-import com.example.rabbitmq.rabbitmqdemo.config.exchange.BasicConfig;
+import com.example.rabbitmq.rabbitmqdemo.config.outer.exchange.BasicConfig;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.core.MessagePropertiesBuilder;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,11 +29,17 @@ public class BasicProducer {
 
     /**
      * 发送消息.
+     * 设置消息体类型为text/plain
      * @author jacksparrow414
      * @param  localDateTime 时间
      * @return void
      */
     public void sendBasicMessage(LocalDateTime localDateTime) {
-        rabbitTemplate.convertAndSend("basic", BASIC_MESSAGE + localDateTime.toString());
+        String msg = BASIC_MESSAGE + localDateTime.toString();
+        MessageProperties messageProperties = MessagePropertiesBuilder.newInstance()
+             .setContentType(MessageProperties.CONTENT_TYPE_TEXT_PLAIN)
+             .setTimestamp(Calendar.getInstance().getTime()).build();
+        Message message = new Message(msg.getBytes(), messageProperties);
+        rabbitTemplate.convertAndSend("basic", message);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.rabbitmq.rabbitmqdemo.config.exchange;
+package com.example.rabbitmq.rabbitmqdemo.config.outer.exchange;
 
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.context.annotation.Bean;

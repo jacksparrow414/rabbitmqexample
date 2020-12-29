@@ -1,13 +1,16 @@
-package com.example.rabbitmq.rabbitmqdemo.config.mq;
+package com.example.rabbitmq.rabbitmqdemo.config.inner.mq;
 
 import com.rabbitmq.client.ConnectionFactory;
+import java.util.Calendar;
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.connection.CompositeChannelListener;
 import org.springframework.amqp.rabbit.connection.PooledChannelConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -72,9 +75,16 @@ public class RabbitMqConfig {
     public RabbitTemplate rabbitTemplate() {
         RabbitTemplate reuslt = new RabbitTemplate(connectionFactory());
         reuslt.setBeforePublishPostProcessors(message -> {
-            System.out.println("发消息之前处理动作--->");
+            // 设置默认Content-Type
+            if (message.getMessageProperties().getContentType() == null) {
+                message.getMessageProperties().setContentType(MessageProperties.CONTENT_TYPE_TEXT_PLAIN);
+            }
+            if (message.getMessageProperties().getTimestamp() == null) {
+                message.getMessageProperties().setTimestamp(Calendar.getInstance().getTime());
+            }
             return message;
         });
+        reuslt.setMessageConverter(new Jackson2JsonMessageConverter());
         return reuslt;
     }
 }
