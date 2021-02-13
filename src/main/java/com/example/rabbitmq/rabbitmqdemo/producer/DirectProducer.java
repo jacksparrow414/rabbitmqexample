@@ -10,11 +10,10 @@ import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 完全匹配的Exchange的生产者发送消息.
+ * 【完全匹配】的Exchange的生产者发送消息.
  * 在发送时指定routingKey和对应的bindingKey做匹配.
  * bindingKey见{@link DirectExchangeConfig}
  * @author jacksparrow414
@@ -23,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DirectProducer {
     
-    @Autowired
+    @Resource(name = "rabbitTemplate")
     private RabbitTemplate rabbitTemplate;
     
     @Resource(name = "directExchange")
